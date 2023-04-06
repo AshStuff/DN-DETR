@@ -161,6 +161,7 @@ class DABDeformableDETR(nn.Module):
                - "aux_outputs": Optional, only returned when auxilary losses are activated. It is a list of
                                 dictionnaries containing the two above keys for each decoder layer.
         """
+        import pdb;pdb.set_trace()
         if not isinstance(samples, NestedTensor):
             samples = nested_tensor_from_tensor_list(samples)
         features, pos = self.backbone(samples)
@@ -191,6 +192,7 @@ class DABDeformableDETR(nn.Module):
         if self.two_stage:
             assert NotImplementedError
         elif self.use_dab:
+            import pdb;pdb.set_trace()
             if self.num_patterns == 0:
                 tgt_all_embed = tgt_embed = self.tgt_embed.weight           # nq, 256
                 refanchor = self.refpoint_embed.weight      # nq, 4
@@ -200,7 +202,7 @@ class DABDeformableDETR(nn.Module):
                 assert NotImplementedError
         else:
             assert NotImplementedError
-
+        import pdb;pdb.set_trace()
         # prepare for dn
         input_query_label, input_query_bbox, attn_mask, mask_dict = \
             prepare_for_dn(dn_args, tgt_all_embed, refanchor, src.size(0), self.training, self.num_queries, self.num_classes,
@@ -209,7 +211,8 @@ class DABDeformableDETR(nn.Module):
 
         hs, init_reference, inter_references, enc_outputs_class, enc_outputs_coord_unact = \
             self.transformer(srcs, masks, pos, query_embeds, attn_mask)
-
+        
+        import pdb;pdb.set_trace()
 
 
         outputs_classes = []
@@ -238,6 +241,7 @@ class DABDeformableDETR(nn.Module):
         out = {'pred_logits': outputs_class[-1], 'pred_boxes': outputs_coord[-1]}
         if self.aux_loss:
             out['aux_outputs'] = self._set_aux_loss(outputs_class, outputs_coord)
+        import pdb;pdb.set_trace()
 
         if self.two_stage:
             enc_outputs_coord = enc_outputs_coord_unact.sigmoid()
